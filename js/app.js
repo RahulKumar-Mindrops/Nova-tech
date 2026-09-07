@@ -705,7 +705,7 @@
   }
 
   /* ------------------------------------------
-     Technology pinned storytelling (smooth)
+     Technology pinned storytelling (no overlap)
   ------------------------------------------ */
 
   function initTechnology() {
@@ -717,15 +717,27 @@
     const visuals = gsap.utils.toArray(".tech-visual");
     const dots = gsap.utils.toArray(".technology__dot");
     const shapes = gsap.utils.toArray(".tech-visual__shape");
+    const panelsWrap = section.querySelector(".technology__panels");
     const total = panels.length;
     let current = -1;
     let counted = new Set();
-    let animating = false;
+    let switchTl = null;
 
-    // Initial hidden state for GSAP control
-    gsap.set(panels, { autoAlpha: 0, y: 36 });
-    gsap.set(visuals, { autoAlpha: 0, scale: 0.92 });
-    gsap.set(shapes, { scale: 1.08 });
+    // Keep every panel absolute; size wrapper to tallest panel
+    if (panelsWrap) {
+      let maxH = 0;
+      panels.forEach((p) => {
+        gsap.set(p, { autoAlpha: 1, position: "relative", clearProps: "transform" });
+        maxH = Math.max(maxH, p.offsetHeight);
+        gsap.set(p, { position: "absolute", autoAlpha: 0, y: 0 });
+      });
+      panelsWrap.style.minHeight = maxH + "px";
+    } else {
+      gsap.set(panels, { autoAlpha: 0, y: 0 });
+    }
+
+    gsap.set(visuals, { autoAlpha: 0, scale: 1 });
+    gsap.set(shapes, { scale: 1 });
 
     function animateCount(panelIndex) {
       const num = panels[panelIndex]?.querySelector("[data-count]");
@@ -735,7 +747,7 @@
       const obj = { val: 0 };
       gsap.to(obj, {
         val: target,
-        duration: 1.35,
+        duration: 1.2,
         ease: "power2.out",
         onUpdate: () => {
           num.textContent = Math.round(obj.val).toLocaleString();
@@ -743,9 +755,19 @@
       });
     }
 
+    function hideAllExcept(activeIndex) {
+      panels.forEach((p, i) => {
+        if (i !== activeIndex) gsap.set(p, { autoAlpha: 0, y: 0 });
+      });
+      visuals.forEach((v, i) => {
+        if (i !== activeIndex) gsap.set(v, { autoAlpha: 0, scale: 1 });
+      });
+    }
+
     function setActive(index, immediate) {
       index = Math.max(0, Math.min(total - 1, index));
       if (index === current) return;
+
       const prev = current;
       current = index;
 
@@ -753,77 +775,84 @@
       panels.forEach((p, i) => p.classList.toggle("is-active", i === current));
       visuals.forEach((v, i) => v.classList.toggle("is-active", i === current));
 
+      if (switchTl) {
+        switchTl.kill();
+        switchTl = null;
+      }
+
+      // Hard-clear every non-active panel so nothing can stack
+      hideAllExcept(current);
+
       if (prefersReduced || immediate) {
-        gsap.set(panels, { autoAlpha: 0, y: 0 });
-        gsap.set(visuals, { autoAlpha: 0, scale: 1 });
         gsap.set(panels[current], { autoAlpha: 1, y: 0 });
         gsap.set(visuals[current], { autoAlpha: 1, scale: 1 });
-        gsap.set(shapes[current], { scale: 1 });
+        if (shapes[current]) gsap.set(shapes[current], { scale: 1 });
         animateCount(current);
         return;
       }
 
-      const tl = gsap.timeline({
-        defaults: { ease: "expo.out" },
-        onStart: () => { animating = true; },
-        onComplete: () => { animating = false; },
+      switchTl = gsap.timeline({
+        defaults: { ease: "power3.out" },
+        onComplete: () => {
+          hideAllExcept(current);
+          gsap.set(panels[current], { autoAlpha: 1, y: 0 });
+          gsap.set(visuals[current], { autoAlpha: 1, scale: 1 });
+        },
       });
 
       if (prev >= 0) {
-        tl.to(
+        switchTl.to(
           panels[prev],
-          { autoAlpha: 0, y: -28, duration: 0.55, ease: "power2.inOut" },
+          { autoAlpha: 0, y: -20, duration: 0.35, ease: "power2.in" },
           0
         );
-        tl.to(
+        switchTl.to(
           visuals[prev],
-          { autoAlpha: 0, scale: 1.06, duration: 0.65, ease: "power2.inOut" },
+          { autoAlpha: 0, duration: 0.35, ease: "power2.in" },
           0
         );
       }
 
-      tl.fromTo(
+      switchTl.fromTo(
         panels[current],
-        { autoAlpha: 0, y: 40 },
-        { autoAlpha: 1, y: 0, duration: 0.85 },
+        { autoAlpha: 0, y: 24 },
+        { autoAlpha: 1, y: 0, duration: 0.55 },
         prev >= 0 ? 0.2 : 0
       );
 
-      tl.fromTo(
+      switchTl.fromTo(
         visuals[current],
-        { autoAlpha: 0, scale: 0.9 },
-        { autoAlpha: 1, scale: 1, duration: 1, ease: "expo.out" },
-        prev >= 0 ? 0.15 : 0
+        { autoAlpha: 0, scale: 0.94 },
+        { autoAlpha: 1, scale: 1, duration: 0.65 },
+        prev >= 0 ? 0.2 : 0
       );
 
-      const shape = shapes[current];
-      if (shape) {
-        tl.fromTo(
-          shape,
-          { scale: 1.12 },
-          { scale: 1, duration: 1.35, ease: "expo.out" },
-          prev >= 0 ? 0.15 : 0
+      if (shapes[current]) {
+        switchTl.fromTo(
+          shapes[current],
+          { scale: 1.06 },
+          { scale: 1, duration: 0.8, ease: "power3.out" },
+          prev >= 0 ? 0.2 : 0
         );
       }
 
-      tl.add(() => animateCount(current), "-=0.8");
+      switchTl.add(() => animateCount(current), "-=0.4");
     }
 
     setupTechDots = function (i) {
       setActive(i, false);
     };
 
-    // Entrance for section eyebrow
     const eyebrow = section.querySelector(".section__eyebrow");
     if (eyebrow && !prefersReduced) {
       gsap.fromTo(
         eyebrow,
-        { autoAlpha: 0, y: 20 },
+        { autoAlpha: 0, y: 16 },
         {
           autoAlpha: 1,
           y: 0,
-          duration: 0.9,
-          ease: "expo.out",
+          duration: 0.7,
+          ease: "power3.out",
           scrollTrigger: {
             trigger: section,
             start: "top 75%",
@@ -841,36 +870,18 @@
       return;
     }
 
-    // Smooth scrubbed storytelling — longer travel for softer transitions
     ScrollTrigger.create({
       trigger: pin,
       start: "top top",
-      end: () => "+=" + window.innerHeight * (total * 1.15),
+      end: () => "+=" + window.innerHeight * total,
       pin: true,
-      scrub: 1.2,
+      scrub: 0.8,
       anticipatePin: 1,
       onUpdate: (self) => {
-        const idx = Math.min(
-          total - 1,
-          Math.floor(self.progress * total + 0.001)
-        );
+        const idx = Math.min(total - 1, Math.floor(self.progress * total));
         if (idx !== current) setActive(idx, false);
       },
     });
-
-    // Subtle floating motion on active visual while pinned
-    if (!prefersReduced) {
-      gsap.to(".technology__visuals", {
-        y: -18,
-        ease: "none",
-        scrollTrigger: {
-          trigger: pin,
-          start: "top top",
-          end: () => "+=" + window.innerHeight * (total * 1.15),
-          scrub: 1.5,
-        },
-      });
-    }
 
     dots.forEach((dot, i) => {
       dot.addEventListener("click", () => {
@@ -878,14 +889,14 @@
         const st = ScrollTrigger.getAll().find((s) => s.trigger === pin);
         if (st && lenis) {
           const scrollTarget = st.start + (st.end - st.start) * progress;
-          lenis.scrollTo(scrollTarget, { duration: 1.2 });
+          lenis.scrollTo(scrollTarget, { duration: 1 });
         } else {
           setActive(i, false);
         }
       });
     });
 
-    setActive(0, false);
+    setActive(0, true);
   }
 
   let setupTechDots = function () {};
