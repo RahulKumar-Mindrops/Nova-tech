@@ -10,6 +10,14 @@
   will-change: opacity, transform;
 }
 
+.technology [data-reveal="fade"],
+.technology [data-reveal="card"],
+.lifestyle [data-reveal="fade"],
+.lifestyle [data-reveal="card"] {
+  opacity: 1;
+  transform: none;
+}
+
 [data-reveal="clip"],
 [data-reveal="clip-left"],
 [data-reveal="clip-right"] {
@@ -69,7 +77,7 @@
   position: absolute;
   width: 6px;
   height: 6px;
-  background: var(--color-accent, #ff6200);
+  background: var(--color-accent, #0a0a0a);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   will-change: transform;
@@ -79,7 +87,7 @@
   position: absolute;
   width: 40px;
   height: 40px;
-  border: 1px solid rgba(255, 98, 0, 0.45);
+  border: 1px solid rgba(10, 10, 10, 0.45);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
@@ -107,13 +115,13 @@
   width: 64px;
   height: 64px;
   border-color: transparent;
-  background: rgba(255, 98, 0, 0.9);
+  background: rgba(10, 10, 10, 0.92);
 }
 
 .cursor.has-label .cursor__ring {
   width: 88px;
   height: 88px;
-  background: #ff6200;
+  background: #0a0a0a;
   border-color: transparent;
 }
 
@@ -129,7 +137,7 @@
 .cursor.is-drag .cursor__ring {
   width: 72px;
   height: 72px;
-  background: rgba(255, 98, 0, 0.95);
+  background: rgba(10, 10, 10, 0.95);
   border-color: transparent;
 }
 
@@ -181,8 +189,7 @@ body.is-loading {
 /* Performance hints */
 .hero__product,
 .cat-card__img,
-.showcase__img,
-.lifestyle__img,
+.lifestyle__media img,
 .explore__tile-img,
 .tech-visual__shape {
   backface-visibility: hidden;
@@ -217,22 +224,7 @@ body.is-loading {
 
 .nav__logo:hover .nav__logo-mark {
   transform: rotate(-8deg) scale(1.08);
-  box-shadow: 0 0 20px rgba(255, 98, 0, 0.5);
-}
-
-.cat-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgba(255, 98, 0, 0.12));
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.cat-card:hover::after {
-  opacity: 1;
+  box-shadow: 0 8px 20px rgba(10, 10, 10, 0.2);
 }
 
 .section__eyebrow {
@@ -240,13 +232,12 @@ body.is-loading {
   display: inline-block;
 }
 
-.showcase__features li {
-  transition: color 0.35s ease, padding-left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.showcase__chips span {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
 }
 
-.showcase__features li:hover {
-  color: #111;
-  padding-left: 28px;
+.showcase__item:hover .showcase__chips span {
+  transform: translateY(-2px);
 }
 
 .tech-visual__shape--display,
@@ -271,15 +262,14 @@ body.is-loading {
 .final-cta__inner::before {
   content: "";
   position: absolute;
-  width: 420px;
-  height: 420px;
+  width: 520px;
+  height: 520px;
   left: 50%;
-  top: 40%;
+  top: 45%;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(255, 98, 0, 0.12), transparent 65%);
-  filter: blur(40px);
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.45), transparent 68%);
+  filter: blur(28px);
   pointer-events: none;
-  animation: glowPulse 5s ease-in-out infinite;
   z-index: 0;
 }
 

@@ -253,8 +253,6 @@
     const eyebrow = document.querySelector(".hero__eyebrow");
     const desc = document.querySelector(".hero__desc");
     const ctas = document.querySelector(".hero__ctas");
-    const trust = document.querySelector(".hero__trust");
-    const visual = document.querySelector(".hero__visual");
     const scrollHint = document.querySelector(".hero__scroll");
     const bgImage = document.querySelector(".hero__bg-image");
 
@@ -292,119 +290,10 @@
       tl.to(ctas, { opacity: 1, y: 0, duration: 0.8 }, 0.7);
     }
 
-    if (trust) {
-      gsap.set(trust, { opacity: 0, y: 16 });
-      tl.to(trust, { opacity: 1, y: 0, duration: 0.7 }, 0.85);
-    }
-
-    if (visual) {
-      tl.fromTo(
-        visual,
-        { clipPath: "inset(100% 0 0 0)", opacity: 0.5 },
-        {
-          clipPath: "inset(0% 0 0 0)",
-          opacity: 1,
-          duration: 1.25,
-          ease: "power4.inOut",
-        },
-        0.35
-      );
-    }
-
     if (scrollHint) {
       gsap.set(scrollHint, { opacity: 0 });
-      tl.to(scrollHint, { opacity: 1, duration: 0.6 }, 1.2);
+      tl.to(scrollHint, { opacity: 1, duration: 0.6 }, 1.0);
     }
-  }
-
-  /* ------------------------------------------
-     Hero image slider
-  ------------------------------------------ */
-
-  function initHeroSlider() {
-    const slider = document.getElementById("heroSlider");
-    if (!slider) return;
-
-    const slides = Array.from(slider.querySelectorAll(".hero-slider__slide"));
-    const dotsWrap = document.getElementById("heroDots");
-    const progress = document.getElementById("heroProgress");
-    const bgImage = document.getElementById("heroBgImage");
-    const prevBtn = document.getElementById("heroPrev");
-    const nextBtn = document.getElementById("heroNext");
-    let index = 0;
-    let timer = null;
-    let progressTween = null;
-    const DURATION = 5;
-
-    slides.forEach((_, i) => {
-      const dot = document.createElement("button");
-      dot.type = "button";
-      dot.className = "hero-slider__dot" + (i === 0 ? " is-active" : "");
-      dot.setAttribute("aria-label", "Go to slide " + (i + 1));
-      dot.addEventListener("click", () => goTo(i));
-      dotsWrap && dotsWrap.appendChild(dot);
-    });
-
-    const dots = dotsWrap ? Array.from(dotsWrap.children) : [];
-
-    function goTo(i) {
-      index = (i + slides.length) % slides.length;
-      slides.forEach((s, n) => s.classList.toggle("is-active", n === index));
-      dots.forEach((d, n) => d.classList.toggle("is-active", n === index));
-
-      const bg = slides[index].getAttribute("data-bg");
-      if (bgImage && bg) {
-        if (!prefersReduced) {
-          gsap.to(bgImage, {
-            opacity: 0.35,
-            duration: 0.35,
-            onComplete: () => {
-              bgImage.style.backgroundImage = `url("${bg}")`;
-              gsap.to(bgImage, { opacity: 1, duration: 0.55 });
-            },
-          });
-        } else {
-          bgImage.style.backgroundImage = `url("${bg}")`;
-        }
-      }
-
-      const activeImg = slides[index].querySelector("img");
-      if (activeImg && !prefersReduced) {
-        gsap.fromTo(
-          activeImg,
-          { scale: 1.1, opacity: 0.7 },
-          { scale: 1, opacity: 1, duration: 1.6, ease: "expo.out" }
-        );
-      }
-
-      restartProgress();
-    }
-
-    function restartProgress() {
-      if (progressTween) progressTween.kill();
-      if (timer) clearInterval(timer);
-      if (prefersReduced || !progress) return;
-
-      gsap.set(progress, { width: "0%" });
-      progressTween = gsap.to(progress, {
-        width: "100%",
-        duration: DURATION,
-        ease: "none",
-        onComplete: () => goTo(index + 1),
-      });
-    }
-
-    prevBtn && prevBtn.addEventListener("click", () => goTo(index - 1));
-    nextBtn && nextBtn.addEventListener("click", () => goTo(index + 1));
-
-    slider.addEventListener("mouseenter", () => {
-      if (progressTween) progressTween.pause();
-    });
-    slider.addEventListener("mouseleave", () => {
-      if (progressTween) progressTween.resume();
-    });
-
-    goTo(0);
   }
 
   /* ------------------------------------------
@@ -508,6 +397,8 @@
       .filter(
         (el) =>
           !el.closest(".hero") &&
+          !el.closest(".technology") &&
+          !el.closest(".lifestyle") &&
           !el.classList.contains("cat-card") &&
           !el.classList.contains("feature-card")
       )
@@ -621,17 +512,17 @@
     });
 
     // Smooth image fades for lifestyle / category media
-    gsap.utils.toArray(".cat-card__img, .lifestyle__img, .feat-slide__media img").forEach((img) => {
+    gsap.utils.toArray(".cat-card__img, .lifestyle__media img, .feat-slide__media img").forEach((img) => {
       gsap.fromTo(
         img,
-        { scale: 1.1, opacity: 0.65 },
+        { scale: 1.06, opacity: 0.85 },
         {
           scale: 1,
           opacity: 1,
-          duration: 1.7,
-          ease: "expo.out",
+          duration: 1.1,
+          ease: "power2.out",
           scrollTrigger: {
-            trigger: img.closest(".cat-card, .lifestyle__item, .feat-slide") || img,
+            trigger: img.closest(".cat-card, .lifestyle__card, .feat-slide") || img,
             start: "top 88%",
             toggleActions: "play none none none",
           },
@@ -710,196 +601,50 @@
 
   function initTechnology() {
     const section = document.getElementById("technology");
-    const pin = document.getElementById("techPin");
-    if (!section || !pin) return;
+    if (!section) return;
 
-    const panels = gsap.utils.toArray(".tech-panel");
-    const visuals = gsap.utils.toArray(".tech-visual");
-    const dots = gsap.utils.toArray(".technology__dot");
-    const shapes = gsap.utils.toArray(".tech-visual__shape");
-    const panelsWrap = section.querySelector(".technology__panels");
-    const total = panels.length;
-    let current = -1;
-    let counted = new Set();
-    let switchTl = null;
+    const headerBits = section.querySelectorAll(".technology__title, .technology__desc, .btn--ghost-light");
+    const cards = section.querySelectorAll(".technology__card");
 
-    // Keep every panel absolute; size wrapper to tallest panel
-    if (panelsWrap) {
-      let maxH = 0;
-      panels.forEach((p) => {
-        gsap.set(p, { autoAlpha: 1, position: "relative", clearProps: "transform" });
-        maxH = Math.max(maxH, p.offsetHeight);
-        gsap.set(p, { position: "absolute", autoAlpha: 0, y: 0 });
-      });
-      panelsWrap.style.minHeight = maxH + "px";
-    } else {
-      gsap.set(panels, { autoAlpha: 0, y: 0 });
-    }
-
-    gsap.set(visuals, { autoAlpha: 0, scale: 1 });
-    gsap.set(shapes, { scale: 1 });
-
-    function animateCount(panelIndex) {
-      const num = panels[panelIndex]?.querySelector("[data-count]");
-      if (!num || counted.has(panelIndex)) return;
-      counted.add(panelIndex);
-      const target = parseInt(num.getAttribute("data-count"), 10) || 0;
-      const obj = { val: 0 };
-      gsap.to(obj, {
-        val: target,
-        duration: 1.2,
-        ease: "power2.out",
-        onUpdate: () => {
-          num.textContent = Math.round(obj.val).toLocaleString();
-        },
-      });
-    }
-
-    function hideAllExcept(activeIndex) {
-      panels.forEach((p, i) => {
-        if (i !== activeIndex) gsap.set(p, { autoAlpha: 0, y: 0 });
-      });
-      visuals.forEach((v, i) => {
-        if (i !== activeIndex) gsap.set(v, { autoAlpha: 0, scale: 1 });
-      });
-    }
-
-    function setActive(index, immediate) {
-      index = Math.max(0, Math.min(total - 1, index));
-      if (index === current) return;
-
-      const prev = current;
-      current = index;
-
-      dots.forEach((d, i) => d.classList.toggle("is-active", i === current));
-      panels.forEach((p, i) => p.classList.toggle("is-active", i === current));
-      visuals.forEach((v, i) => v.classList.toggle("is-active", i === current));
-
-      if (switchTl) {
-        switchTl.kill();
-        switchTl = null;
-      }
-
-      // Hard-clear every non-active panel so nothing can stack
-      hideAllExcept(current);
-
-      if (prefersReduced || immediate) {
-        gsap.set(panels[current], { autoAlpha: 1, y: 0 });
-        gsap.set(visuals[current], { autoAlpha: 1, scale: 1 });
-        if (shapes[current]) gsap.set(shapes[current], { scale: 1 });
-        animateCount(current);
-        return;
-      }
-
-      switchTl = gsap.timeline({
-        defaults: { ease: "power3.out" },
-        onComplete: () => {
-          hideAllExcept(current);
-          gsap.set(panels[current], { autoAlpha: 1, y: 0 });
-          gsap.set(visuals[current], { autoAlpha: 1, scale: 1 });
-        },
-      });
-
-      if (prev >= 0) {
-        switchTl.to(
-          panels[prev],
-          { autoAlpha: 0, y: -20, duration: 0.35, ease: "power2.in" },
-          0
-        );
-        switchTl.to(
-          visuals[prev],
-          { autoAlpha: 0, duration: 0.35, ease: "power2.in" },
-          0
-        );
-      }
-
-      switchTl.fromTo(
-        panels[current],
-        { autoAlpha: 0, y: 24 },
-        { autoAlpha: 1, y: 0, duration: 0.55 },
-        prev >= 0 ? 0.2 : 0
-      );
-
-      switchTl.fromTo(
-        visuals[current],
-        { autoAlpha: 0, scale: 0.94 },
-        { autoAlpha: 1, scale: 1, duration: 0.65 },
-        prev >= 0 ? 0.2 : 0
-      );
-
-      if (shapes[current]) {
-        switchTl.fromTo(
-          shapes[current],
-          { scale: 1.06 },
-          { scale: 1, duration: 0.8, ease: "power3.out" },
-          prev >= 0 ? 0.2 : 0
-        );
-      }
-
-      switchTl.add(() => animateCount(current), "-=0.4");
-    }
-
-    setupTechDots = function (i) {
-      setActive(i, false);
-    };
-
-    const eyebrow = section.querySelector(".section__eyebrow");
-    if (eyebrow && !prefersReduced) {
-      gsap.fromTo(
-        eyebrow,
-        { autoAlpha: 0, y: 16 },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.7,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: section,
-            start: "top 75%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-    }
-
-    if (isMobile || prefersReduced) {
-      setActive(0, true);
-      dots.forEach((dot, i) => {
-        dot.addEventListener("click", () => setActive(i, prefersReduced));
-      });
+    if (prefersReduced) {
+      gsap.set([headerBits, cards], { autoAlpha: 1, y: 0, clearProps: "transform" });
       return;
     }
 
-    ScrollTrigger.create({
-      trigger: pin,
-      start: "top top",
-      end: () => "+=" + window.innerHeight * total,
-      pin: true,
-      scrub: 0.8,
-      anticipatePin: 1,
-      onUpdate: (self) => {
-        const idx = Math.min(total - 1, Math.floor(self.progress * total));
-        if (idx !== current) setActive(idx, false);
-      },
-    });
+    gsap.fromTo(
+      headerBits,
+      { autoAlpha: 0, y: 20 },
+      {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.65,
+        stagger: 0.08,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          toggleActions: "play none none none",
+        },
+      }
+    );
 
-    dots.forEach((dot, i) => {
-      dot.addEventListener("click", () => {
-        const progress = (i + 0.35) / total;
-        const st = ScrollTrigger.getAll().find((s) => s.trigger === pin);
-        if (st && lenis) {
-          const scrollTarget = st.start + (st.end - st.start) * progress;
-          lenis.scrollTo(scrollTarget, { duration: 1 });
-        } else {
-          setActive(i, false);
-        }
-      });
-    });
-
-    setActive(0, true);
+    gsap.fromTo(
+      cards,
+      { autoAlpha: 0, y: 24 },
+      {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.7,
+        stagger: 0.1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: section.querySelector(".technology__grid"),
+          start: "top 88%",
+          toggleActions: "play none none none",
+        },
+      }
+    );
   }
-
-  let setupTechDots = function () {};
 
   /* ------------------------------------------
      Horizontal explore drag
@@ -1041,20 +786,39 @@
       );
     });
 
-    // Lifestyle images scale out of clip
-    gsap.utils.toArray(".lifestyle__item").forEach((item, i) => {
+    // Lifestyle — simple fade up (VIZIO-style)
+    const lifestyleHeader = document.querySelector(".lifestyle__title");
+    if (lifestyleHeader) {
+      gsap.fromTo(
+        lifestyleHeader,
+        { autoAlpha: 0, y: 20 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.65,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: "#lifestyle",
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }
+
+    gsap.utils.toArray(".lifestyle__card").forEach((item, i) => {
       gsap.fromTo(
         item,
-        { clipPath: "inset(10% 10% 10% 10% round 20px)", opacity: 0.5 },
+        { autoAlpha: 0, y: 24 },
         {
-          clipPath: "inset(0% 0% 0% 0% round 16px)",
-          opacity: 1,
-          duration: 1.5,
-          delay: i * 0.1,
-          ease: "expo.out",
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.7,
+          delay: i * 0.08,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: item,
-            start: "top 85%",
+            start: "top 88%",
             toggleActions: "play none none none",
           },
         }
@@ -1145,21 +909,21 @@
       }
     );
 
-    // Showcase feature list stagger polish
-    document.querySelectorAll(".showcase__features").forEach((list) => {
-      const items = list.querySelectorAll("li");
+    // Showcase chips polish
+    document.querySelectorAll(".showcase__chips").forEach((list) => {
+      const items = list.querySelectorAll("span");
       gsap.fromTo(
         items,
-        { opacity: 0, x: -20 },
+        { opacity: 0, y: 12 },
         {
           opacity: 1,
-          x: 0,
-          duration: 0.65,
-          stagger: 0.1,
+          y: 0,
+          duration: 0.55,
+          stagger: 0.08,
           ease: "power2.out",
           scrollTrigger: {
             trigger: list,
-            start: "top 85%",
+            start: "top 88%",
             toggleActions: "play none none none",
           },
         }
@@ -1168,9 +932,9 @@
 
     // Soft scrub on section titles (desktop)
     if (!isMobile) {
-      gsap.utils.toArray(".showcase__title, .promo__title").forEach((title) => {
+      gsap.utils.toArray(".showcase__heading, .promo__title").forEach((title) => {
         gsap.to(title, {
-          y: -30,
+          y: -18,
           ease: "none",
           scrollTrigger: {
             trigger: title,
@@ -1250,7 +1014,6 @@
     await runPreloader();
 
     animateHero();
-    initHeroSlider();
     initFeaturedSlider();
     initScrollReveals();
     initParallax();
