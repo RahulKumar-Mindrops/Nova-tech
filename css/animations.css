@@ -1,0 +1,316 @@
+/* ============================================
+   NovaTech — Motion & Animation Utilities
+   ============================================ */
+
+/* Initial hidden states (GSAP will reveal) */
+[data-reveal="fade"],
+[data-reveal="card"] {
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+[data-reveal="clip"],
+[data-reveal="clip-left"],
+[data-reveal="clip-right"] {
+  will-change: clip-path;
+}
+
+[data-reveal="clip"] {
+  clip-path: inset(100% 0 0 0);
+}
+
+[data-reveal="clip-left"] {
+  clip-path: inset(0 100% 0 0);
+}
+
+[data-reveal="clip-right"] {
+  clip-path: inset(0 0 0 100%);
+}
+
+/* Split text — words start below */
+.split-word > span,
+.split-line > span {
+  transform: translateY(110%);
+}
+
+/* When reduced motion or after reveal complete, ensure visibility */
+.reveal-done,
+.is-visible {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: inset(0) !important;
+}
+
+.reveal-done .split-word > span,
+.reveal-done .split-line > span,
+.is-visible .split-word > span,
+.is-visible .split-line > span {
+  transform: none !important;
+}
+
+/* Custom Cursor */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  mix-blend-mode: normal;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cursor.is-active {
+  opacity: 1;
+}
+
+.cursor__dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--color-accent, #ff6200);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+.cursor__ring {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 98, 0, 0.45);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.35s ease,
+    border-color 0.35s ease;
+  will-change: transform, width, height;
+}
+
+.cursor__label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #000;
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.cursor.is-hover .cursor__ring {
+  width: 64px;
+  height: 64px;
+  border-color: transparent;
+  background: rgba(255, 98, 0, 0.9);
+}
+
+.cursor.has-label .cursor__ring {
+  width: 88px;
+  height: 88px;
+  background: #ff6200;
+  border-color: transparent;
+}
+
+.cursor.has-label .cursor__label {
+  opacity: 1;
+  color: #fff;
+}
+
+.cursor.has-label .cursor__dot {
+  opacity: 0;
+}
+
+.cursor.is-drag .cursor__ring {
+  width: 72px;
+  height: 72px;
+  background: rgba(255, 98, 0, 0.95);
+  border-color: transparent;
+}
+
+.cursor.is-drag .cursor__label {
+  opacity: 1;
+  color: #fff;
+}
+
+/* Hide native cursor on desktop when custom cursor active */
+body.has-custom-cursor,
+body.has-custom-cursor a,
+body.has-custom-cursor button {
+  cursor: none;
+}
+
+@media (max-width: 900px), (pointer: coarse) {
+  .cursor {
+    display: none !important;
+  }
+
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button {
+    cursor: auto;
+  }
+}
+
+/* Magnetic button subtle lift */
+[data-magnetic] {
+  will-change: transform;
+}
+
+/* Body lock during preloader */
+body.is-loading {
+  overflow: hidden;
+}
+
+/* Smooth section background transitions */
+.section-bg-transition {
+  transition: background-color 0.6s ease;
+}
+
+/* Image scale wrapper for clip reveals */
+.clip-reveal-inner {
+  transform: scale(1.15);
+  will-change: transform;
+}
+
+/* Performance hints */
+.hero__product,
+.cat-card__img,
+.showcase__img,
+.lifestyle__img,
+.explore__tile-img,
+.tech-visual__shape {
+  backface-visibility: hidden;
+}
+
+/* Extra motion polish — VIZIO-feel energy */
+.btn--primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.25) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn--primary:hover::before {
+  transform: translateX(120%);
+}
+
+.hero__glow {
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
+
+.nav__logo-mark {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+
+.nav__logo:hover .nav__logo-mark {
+  transform: rotate(-8deg) scale(1.08);
+  box-shadow: 0 0 20px rgba(255, 98, 0, 0.5);
+}
+
+.cat-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(255, 98, 0, 0.12));
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cat-card:hover::after {
+  opacity: 1;
+}
+
+.section__eyebrow {
+  position: relative;
+  display: inline-block;
+}
+
+.showcase__features li {
+  transition: color 0.35s ease, padding-left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.showcase__features li:hover {
+  color: #111;
+  padding-left: 28px;
+}
+
+.tech-visual__shape--display,
+.tech-visual__shape--chip,
+.tech-visual__shape--mesh,
+.tech-visual__shape--wave {
+  animation: none;
+}
+
+.explore__tile span {
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.explore__tile:hover span {
+  transform: translateY(-4px);
+}
+
+.final-cta__inner {
+  position: relative;
+}
+
+.final-cta__inner::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 98, 0, 0.12), transparent 65%);
+  filter: blur(40px);
+  pointer-events: none;
+  animation: glowPulse 5s ease-in-out infinite;
+  z-index: 0;
+}
+
+.final-cta__title,
+.final-cta__desc,
+.final-cta__actions {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  .split-word > span,
+  .split-line > span {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+
+  .cursor {
+    display: none !important;
+  }
+
+  .hero__glow,
+  .tech-visual__shape--display,
+  .tech-visual__shape--chip,
+  .tech-visual__shape--mesh,
+  .tech-visual__shape--wave,
+  .final-cta__inner::before,
+  .promo__bg,
+  .promo__badge {
+    animation: none !important;
+  }
+}
