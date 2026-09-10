@@ -1,5 +1,5 @@
 /**
- * NovaTech — GSAP + Lenis + ScrollTrigger Animation Engine
+ * VOIR — GSAP + Lenis + ScrollTrigger Animation Engine
  */
 (function () {
   "use strict";
@@ -150,13 +150,18 @@
 
       document.body.classList.add("is-loading");
 
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        document.body.classList.remove("is-loading");
+        preloader.classList.add("is-done");
+        gsap.set(preloader, { display: "none" });
+        resolve();
+      };
+
       const tl = gsap.timeline({
-        onComplete: () => {
-          document.body.classList.remove("is-loading");
-          preloader.classList.add("is-done");
-          gsap.set(preloader, { display: "none" });
-          resolve();
-        },
+        onComplete: finish,
       });
 
       tl.to(brandText, {
@@ -190,6 +195,8 @@
         },
         "+=0.15"
       );
+
+      window.setTimeout(finish, 4200);
     });
   }
 
@@ -301,68 +308,110 @@
   ------------------------------------------ */
 
   function initFeaturedSlider() {
-    const wrap = document.querySelector(".featured-slider__wrap");
+    const wrap = document.getElementById("featCarousel") || document.querySelector(".featured-slider__wrap");
     const track = document.getElementById("featTrack");
     if (!wrap || !track) return;
 
+    const slides = Array.from(track.querySelectorAll(".feat-slide"));
+    if (!slides.length) return;
+
+    let active = Math.min(1, slides.length - 1);
     let currentX = 0;
     let targetX = 0;
-    let maxScroll = 0;
     let isDown = false;
     let startX = 0;
-    let scrollLeft = 0;
+    let scrollStart = 0;
+    let dragged = false;
 
-    function measure() {
-      maxScroll = Math.max(0, track.scrollWidth - wrap.clientWidth);
+    function centerOffset(index) {
+      const slide = slides[index];
+      if (!slide) return 0;
+      const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+      return wrap.clientWidth / 2 - slideCenter;
     }
-    measure();
-    window.addEventListener("resize", measure);
 
-    function slideBy(dir) {
-      const step = Math.min(400, wrap.clientWidth * 0.7);
-      targetX = Math.min(0, Math.max(-maxScroll, targetX - dir * step));
+    function setActive(index, animate = true) {
+      active = Math.max(0, Math.min(slides.length - 1, index));
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("is-active", i === active);
+        slide.classList.toggle("is-near", Math.abs(i - active) === 1);
+      });
+      targetX = centerOffset(active);
+      if (!animate) currentX = targetX;
     }
+
+    function nearestIndex(x) {
+      let best = 0;
+      let bestDist = Infinity;
+      slides.forEach((_, i) => {
+        const dist = Math.abs(centerOffset(i) - x);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = i;
+        }
+      });
+      return best;
+    }
+
+    setActive(active, false);
+
+    window.addEventListener("resize", () => {
+      setActive(active, false);
+    });
 
     const prev = document.getElementById("featPrev");
     const next = document.getElementById("featNext");
-    prev && prev.addEventListener("click", () => slideBy(-1));
-    next && next.addEventListener("click", () => slideBy(1));
+    prev && prev.addEventListener("click", () => setActive(active - 1));
+    next && next.addEventListener("click", () => setActive(active + 1));
 
     wrap.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
       isDown = true;
+      dragged = false;
       startX = e.clientX;
-      scrollLeft = targetX;
+      scrollStart = targetX;
+      wrap.classList.add("is-dragging");
       wrap.setPointerCapture(e.pointerId);
     });
+
     wrap.addEventListener("pointermove", (e) => {
       if (!isDown) return;
-      targetX = Math.min(0, Math.max(-maxScroll, scrollLeft + (e.clientX - startX)));
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 6) dragged = true;
+      targetX = scrollStart + dx;
     });
-    wrap.addEventListener("pointerup", () => { isDown = false; });
-    wrap.addEventListener("pointercancel", () => { isDown = false; });
 
-    wrap.addEventListener(
-      "wheel",
-      (e) => {
-        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+    function endDrag() {
+      if (!isDown) return;
+      isDown = false;
+      wrap.classList.remove("is-dragging");
+      setActive(nearestIndex(targetX));
+    }
+
+    wrap.addEventListener("pointerup", endDrag);
+    wrap.addEventListener("pointercancel", endDrag);
+
+    slides.forEach((slide, i) => {
+      slide.addEventListener("click", (e) => {
+        if (dragged) {
           e.preventDefault();
-          targetX = Math.min(0, Math.max(-maxScroll, targetX - e.deltaY));
+          return;
         }
-      },
-      { passive: false }
-    );
+        if (i !== active) {
+          e.preventDefault();
+          setActive(i);
+        }
+      });
+    });
 
-    // Entrance animation for slides
     if (!prefersReduced) {
       gsap.fromTo(
-        track.children,
-        { opacity: 0, y: 50, rotate: 2 },
+        wrap,
+        { opacity: 0, y: 48 },
         {
           opacity: 1,
           y: 0,
-          rotate: 0,
-          duration: 0.9,
-          stagger: 0.08,
+          duration: 1,
           ease: "power3.out",
           scrollTrigger: {
             trigger: wrap,
@@ -374,7 +423,7 @@
     }
 
     function tick() {
-      currentX += (targetX - currentX) * 0.12;
+      currentX += (targetX - currentX) * 0.14;
       track.style.transform = `translate3d(${currentX}px, 0, 0)`;
       requestAnimationFrame(tick);
     }
@@ -1001,10 +1050,496 @@
   }
 
   /* ------------------------------------------
+     VOIR data-driven UI
+  ------------------------------------------ */
+
+  function el(id) {
+    return document.getElementById(id);
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function modelCardHtml(m) {
+    const qled = m.qled ? "QLED" : "Non-QLED";
+    const chip = m.series === "core" ? "chip--orange" : "chip--teal";
+    const keys = (m.keyFeatures || []).slice(0, 5).map(escapeHtml).join(" · ");
+    const extras = [];
+    if (m.emi) extras.push("EMI from " + m.emi);
+    if (m.freeInstallation) extras.push("Free installation");
+    return (
+      '<article class="model-card model-card--' +
+      m.series +
+      '">' +
+      '<div class="model-card__media"><img src="' +
+      escapeHtml(m.image) +
+      '" alt="' +
+      escapeHtml(m.id) +
+      '" /></div>' +
+      '<div class="model-card__body">' +
+      '<div class="model-card__meta">' +
+      '<span class="chip">' +
+      escapeHtml(m.size) +
+      "</span>" +
+      '<span class="chip ' +
+      chip +
+      '">' +
+      qled +
+      "</span>" +
+      '<span class="chip">' +
+      escapeHtml(m.resolutionLabel) +
+      "</span></div>" +
+      '<h3 class="model-card__id">' +
+      escapeHtml(m.id) +
+      "</h3>" +
+      '<p class="model-card__facts">' +
+      escapeHtml(m.os) +
+      "<br>" +
+      escapeHtml(m.processor) +
+      "<br>" +
+      escapeHtml(m.resolution) +
+      (extras.length ? "<br>" + extras.map(escapeHtml).join(" · ") : "") +
+      "</p>" +
+      '<p class="model-card__features">' +
+      keys +
+      "</p>" +
+      '<a class="btn btn--primary" href="tv.html?model=' +
+      encodeURIComponent(m.id) +
+      '" data-cursor="Explore">View Specifications</a>' +
+      "</div></article>"
+    );
+  }
+
+  function renderFeaturedSlider() {
+    const track = el("featTrack");
+    if (!track || !window.VOIR) return;
+    const picks = window.VOIR.models.filter(function (m) {
+      return ["VR55FLG14KQ", "VR32FLG12KQ", "VTN55CU2EB", "VTQ43CF2EB", "VTQ40CF2EB", "VTQ32CH2EB"].indexOf(m.id) !== -1;
+    });
+    track.innerHTML = picks
+      .map(function (m) {
+        const seriesName = window.VOIR.series[m.series].name;
+        return (
+          '<article class="feat-slide">' +
+          '<div class="feat-slide__media"><img src="' +
+          escapeHtml(m.image) +
+          '" alt="' +
+          escapeHtml(m.id) +
+          '" /></div>' +
+          '<div class="feat-slide__body">' +
+          "<span>" +
+          escapeHtml(seriesName) +
+          "</span>" +
+          "<h3>" +
+          escapeHtml(m.size) +
+          " " +
+          escapeHtml(m.id) +
+          "</h3>" +
+          "<p>" +
+          (m.qled ? "QLED" : "Non-QLED") +
+          " · " +
+          escapeHtml(m.resolutionLabel) +
+          " · " +
+          escapeHtml(m.os) +
+          "</p>" +
+          '<a href="tv.html?model=' +
+          encodeURIComponent(m.id) +
+          '" class="feat-slide__link">View Specifications →</a>' +
+          "</div></article>"
+        );
+      })
+      .join("");
+  }
+
+  function initFeatureTabs() {
+    const tabs = el("featureTabs");
+    const nameEl = el("featureName");
+    const tagEl = el("featureTagline");
+    const groupEl = el("featureGroup");
+    const countEl = el("featureCount");
+    const imageEl = el("featureImage");
+    if (!tabs || !window.VOIR) return;
+
+    const features = window.VOIR.features;
+    const images = [
+      "images/tv-hero.jpg",
+      "images/zenith-55.jpg",
+      "images/core-40.jpg",
+      "images/lifestyle-1.jpg",
+      "images/zenith-32.jpg",
+      "images/core-55.jpg",
+      "images/tv-angle.jpg",
+      "images/lifestyle-2.jpg",
+    ];
+    let index = 0;
+    let timer = null;
+
+    function show(i) {
+      index = (i + features.length) % features.length;
+      const f = features[index];
+      tabs.querySelectorAll(".feature-tab").forEach(function (btn, idx) {
+        const on = idx === index;
+        btn.classList.toggle("is-active", on);
+        if (on) {
+          btn.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        }
+      });
+      if (groupEl) groupEl.textContent = f.group;
+      if (nameEl) nameEl.textContent = f.name;
+      if (tagEl) tagEl.textContent = f.tagline;
+      if (countEl) countEl.textContent = index + 1 + " / " + features.length;
+      if (imageEl) {
+        imageEl.src = images[index % images.length];
+        imageEl.alt = f.name;
+      }
+    }
+
+    tabs.innerHTML = features
+      .map(function (f, i) {
+        return (
+          '<button type="button" class="feature-tab' +
+          (i === 0 ? " is-active" : "") +
+          '" role="tab" data-index="' +
+          i +
+          '">' +
+          escapeHtml(f.name) +
+          "</button>"
+        );
+      })
+      .join("");
+
+    tabs.addEventListener("click", function (e) {
+      const btn = e.target.closest(".feature-tab");
+      if (!btn) return;
+      show(parseInt(btn.getAttribute("data-index"), 10));
+      restart();
+    });
+
+    function restart() {
+      if (timer) clearInterval(timer);
+      if (prefersReduced) return;
+      timer = setInterval(function () {
+        show(index + 1);
+      }, 4200);
+    }
+
+    show(0);
+    restart();
+  }
+
+  function renderPromise() {
+    const grid = el("promiseGrid");
+    if (!grid || !window.VOIR) return;
+    grid.innerHTML = window.VOIR.catalogue.pillars
+      .map(function (col) {
+        const items = col.items
+          .map(function (it) {
+            return (
+              '<div class="promise-item"><strong>' +
+              escapeHtml(it.name) +
+              "</strong><span>" +
+              escapeHtml(it.text) +
+              "</span></div>"
+            );
+          })
+          .join("");
+        return (
+          '<article class="promise-col"><h3>' +
+          escapeHtml(col.title) +
+          "</h3><p>" +
+          escapeHtml(col.text) +
+          "</p>" +
+          items +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
+  function renderPointers() {
+    const host = el("pointerGroups");
+    if (!host || !window.VOIR) return;
+
+    const meta = {
+      Picture: {
+        role: "hero",
+        image: "images/lifestyle-1.jpg",
+        className: "ptr--hero",
+      },
+      Sound: {
+        role: "stack",
+        image: "images/soundbar.jpg",
+        className: "ptr--stack ptr--sound",
+      },
+      Processor: {
+        role: "stack",
+        image: "images/tech.jpg",
+        className: "ptr--stack ptr--processor",
+      },
+      "Smart Features": {
+        role: "band",
+        image: "images/showcase-tv.jpg",
+        className: "ptr--band",
+      },
+      Panel: {
+        role: "pair",
+        image: "images/zenith-55.jpg",
+        className: "ptr--pair ptr--panel",
+      },
+      Aesthetics: {
+        role: "pair",
+        image: "images/remote.jpg",
+        className: "ptr--pair ptr--aesthetics",
+      },
+    };
+
+    const order = [
+      "Picture",
+      "Sound",
+      "Processor",
+      "Smart Features",
+      "Panel",
+      "Aesthetics",
+    ];
+    const byGroup = {};
+    window.VOIR.pointers.forEach(function (g) {
+      byGroup[g.group] = g;
+    });
+
+    host.innerHTML = order
+      .map(function (name) {
+        const g = byGroup[name];
+        const m = meta[name];
+        if (!g || !m) return "";
+        const lead = g.items[0];
+        const rest = g.items.slice(1);
+        const secondaryLimit = m.role === "stack" ? 2 : m.role === "pair" ? 3 : 5;
+        const specs =
+          '<ul class="ptr__specs">' +
+          (lead
+            ? '<li class="is-lead">' + escapeHtml(lead.title) + "</li>"
+            : "") +
+          rest
+            .slice(0, secondaryLimit)
+            .map(function (it) {
+              return "<li>" + escapeHtml(it.title) + "</li>";
+            })
+            .join("") +
+          "</ul>";
+
+        const media =
+          '<div class="ptr__media"><img src="' +
+          escapeHtml(m.image) +
+          '" alt="" loading="lazy" /></div><div class="ptr__shade" aria-hidden="true"></div>';
+        const body =
+          '<div class="ptr__body">' +
+          '<p class="ptr__label">' +
+          escapeHtml(g.group) +
+          "</p>" +
+          '<h3 class="ptr__hero-spec">' +
+          escapeHtml(lead ? lead.title : g.group) +
+          "</h3>" +
+          '<p class="ptr__desc">' +
+          escapeHtml(lead ? lead.text : "") +
+          "</p>" +
+          specs +
+          "</div>";
+
+        return (
+          '<article class="ptr ' +
+          m.className +
+          '" data-reveal="card">' +
+          media +
+          body +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
+  function renderModelGrid(seriesId) {
+    const grid = el("modelGrid");
+    if (!grid || !window.VOIR) return;
+    const list = window.VOIR.modelsBySeries(seriesId);
+    grid.innerHTML = list.map(modelCardHtml).join("");
+  }
+
+  function initSeriesTabs() {
+    const tabs = el("seriesTabs");
+    if (!tabs) return;
+    let series = "zenith";
+    if (location.hash === "#core") series = "core";
+    tabs.querySelectorAll(".series-tab").forEach(function (btn) {
+      btn.classList.toggle("is-active", btn.getAttribute("data-series") === series);
+    });
+    renderModelGrid(series);
+    tabs.addEventListener("click", function (e) {
+      const btn = e.target.closest(".series-tab");
+      if (!btn) return;
+      series = btn.getAttribute("data-series");
+      tabs.querySelectorAll(".series-tab").forEach(function (b) {
+        b.classList.toggle("is-active", b === btn);
+      });
+      history.replaceState(null, "", "#" + series);
+      renderModelGrid(series);
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
+    });
+  }
+
+  function renderSpecPage() {
+    const root = el("specRoot");
+    if (!root || !window.VOIR) return;
+    const params = new URLSearchParams(location.search);
+    const id = params.get("model");
+    const m = id ? window.VOIR.getModel(id) : null;
+    if (!m) {
+      root.innerHTML =
+        '<div class="section__header"><p class="section__eyebrow">Specifications</p><h1 class="section__title">Select a model</h1><p class="section__lead"><a href="tvs.html">Browse TVs</a></p></div>';
+      return;
+    }
+    document.title = m.id + " — VOIR Specifications";
+    const groups = Object.keys(m.specs)
+      .map(function (group) {
+        const rows = m.specs[group]
+          .map(function (row) {
+            return "<tr><th>" + escapeHtml(row[0]) + "</th><td>" + escapeHtml(row[1]) + "</td></tr>";
+          })
+          .join("");
+        return (
+          '<div class="spec-group"><h3>' +
+          escapeHtml(group) +
+          '</h3><div class="spec-wrap"><table class="spec-table">' +
+          rows +
+          "</table></div></div>"
+        );
+      })
+      .join("");
+    const chips =
+      '<div class="model-card__meta" style="margin:16px 0">' +
+      '<span class="chip">' +
+      escapeHtml(m.size) +
+      "</span><span class=\"chip chip--teal\">" +
+      (m.qled ? "QLED" : "Non-QLED") +
+      "</span><span class=\"chip\">" +
+      escapeHtml(m.resolutionLabel) +
+      "</span><span class=\"chip\">" +
+      escapeHtml(m.os) +
+      "</span></div>";
+    root.innerHTML =
+      '<div class="spec-hero">' +
+      '<div class="spec-hero__media"><img src="' +
+      escapeHtml(m.image) +
+      '" alt="' +
+      escapeHtml(m.id) +
+      '" /></div>' +
+      "<div><p class=\"section__eyebrow\">" +
+      escapeHtml(window.VOIR.series[m.series].name) +
+      "</p><h1 class=\"section__title\">" +
+      escapeHtml(m.id) +
+      "</h1>" +
+      chips +
+      '<p class="section__lead" style="margin-top:16px">' +
+      escapeHtml(m.processor) +
+      "</p>" +
+      '<a href="tvs.html#' +
+      m.series +
+      '" class="btn btn--secondary" style="margin-top:16px">Back to series</a></div></div>' +
+      '<div style="margin-top:48px">' +
+      groups +
+      "</div>";
+  }
+
+  function renderAbout() {
+    if (!window.VOIR) return;
+    const copy = el("aboutCopy");
+    if (copy) {
+      const story = (window.VOIR.about.storyline || [])
+        .map(function (p) {
+          return "<p style=\"margin-bottom:16px\">" + escapeHtml(p) + "</p>";
+        })
+        .join("");
+      const aboutUs =
+        '<h3 style="margin:32px 0 16px;font-size:1.25rem">About Us</h3>' +
+        (window.VOIR.about.aboutUs || [])
+          .map(function (p) {
+            return "<p style=\"margin-bottom:16px\">" + escapeHtml(p) + "</p>";
+          })
+          .join("");
+      copy.innerHTML = story + aboutUs;
+    }
+    const values = el("valuesGrid");
+    if (values) {
+      values.innerHTML = window.VOIR.about.values
+        .map(function (v) {
+          return (
+            '<article class="value-card"><h3>' +
+            escapeHtml(v.title) +
+            "</h3><p>" +
+            escapeHtml(v.text) +
+            "</p></article>"
+          );
+        })
+        .join("");
+    }
+    const mission = el("missionText");
+    const vision = el("visionText");
+    if (mission) mission.textContent = window.VOIR.about.mission;
+    if (vision) vision.textContent = window.VOIR.about.vision;
+    const team = el("teamGrid");
+    if (team) {
+      team.innerHTML = window.VOIR.team
+        .map(function (person) {
+          const paras = person.paragraphs
+            .map(function (p) {
+              return "<p>" + escapeHtml(p) + "</p>";
+            })
+            .join("");
+          return (
+            '<article class="team-card"><h3>' +
+            escapeHtml(person.name) +
+            "</h3>" +
+            paras +
+            "</article>"
+          );
+        })
+        .join("");
+    }
+  }
+
+  function initRecruitForm() {
+    const form = el("recruitForm");
+    if (!form) return;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const status = el("recruitStatus");
+      const email = window.VOIR.contacts.email;
+      if (status) {
+        status.textContent =
+          "Thank you. Please also send your resume to " + email + ".";
+      }
+      form.reset();
+    });
+  }
+
+  /* ------------------------------------------
      Boot
   ------------------------------------------ */
 
   async function boot() {
+    renderFeaturedSlider();
+    renderPromise();
+    renderPointers();
+    initFeatureTabs();
+    initSeriesTabs();
+    renderSpecPage();
+    renderAbout();
+    initRecruitForm();
+
     prepareSplits();
     initNav();
     initLenis();

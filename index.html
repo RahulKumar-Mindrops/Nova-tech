@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NovaTech — Smart Living, Beautifully Designed</title>
-  <meta name="description" content="NovaTech creates simple, innovative electronics for modern homes worldwide — smartphones, TVs, soundbars, smart home, and more." />
+  <title>VOIR — SEE IT. LOVE IT. LIVE IT.</title>
+  <meta name="description" content="SEE IT. LOVE IT. LIVE IT. VOIR QLED TVs — Zenith Series and Core Series." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/pages.css" />
 </head>
 <body>
   <div class="cursor" id="cursor" aria-hidden="true">
@@ -17,11 +18,10 @@
     <div class="cursor__ring"></div>
     <span class="cursor__label"></span>
   </div>
-
   <div class="preloader" id="preloader" aria-hidden="true">
     <div class="preloader__inner">
       <div class="preloader__brand">
-        <span class="preloader__brand-text">NovaTech</span>
+        <span class="preloader__brand-text">VOIR</span>
       </div>
       <div class="preloader__progress-wrap">
         <div class="preloader__progress" id="preloaderProgress"></div>
@@ -29,29 +29,9 @@
       <div class="preloader__percent" id="preloaderPercent">0%</div>
     </div>
   </div>
-
-  <header class="nav" id="nav">
-    <div class="nav__inner">
-      <a href="#hero" class="nav__logo" data-magnetic>
-        <span class="nav__logo-mark">N</span>
-        <span class="nav__logo-text">NovaTech</span>
-      </a>
-      <nav class="nav__links" id="navLinks" aria-label="Primary">
-        <a href="#categories" class="nav__link"><span>Products</span></a>
-        <a href="#showcase" class="nav__link"><span>Showcase</span></a>
-        <a href="#technology" class="nav__link"><span>Innovation</span></a>
-        <a href="#features" class="nav__link"><span>Benefits</span></a>
-        <a href="#global" class="nav__link"><span>Worldwide</span></a>
-        <a href="#final-cta" class="nav__link nav__link--cta" data-magnetic><span>Get Started</span></a>
-      </nav>
-      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </header>
-
+  <div id="site-nav"></div>
   <main id="main">
-    <!-- Hero -->
+
     <section class="hero" id="hero">
       <div class="hero__bg" aria-hidden="true">
         <div class="hero__bg-image" id="heroBgImage"></div>
@@ -59,16 +39,14 @@
         <div class="hero__grain"></div>
       </div>
       <div class="hero__content">
-        <p class="hero__eyebrow" data-reveal="fade">NovaTech 2026</p>
-        <h1 class="hero__title" data-split="words">
-          Technology that feels simple
-        </h1>
+        <p class="hero__eyebrow" data-reveal="fade">QLED TV · Zenith · Core</p>
+        <h1 class="hero__title" data-split="words">SEE IT. LOVE IT. LIVE IT.</h1>
         <p class="hero__desc" data-reveal="fade">
-          Premium electronics made easy — displays, phones, and smarter homes.
+          Make it worth seeing first.
         </p>
         <div class="hero__ctas" data-reveal="fade">
-          <a href="#categories" class="btn btn--primary" data-magnetic data-cursor="Explore">Explore Products</a>
-          <a href="#featured-slider" class="btn btn--secondary" data-magnetic>View Gallery</a>
+          <a href="tvs.html" class="btn btn--primary" data-magnetic data-cursor="Explore">Explore TVs</a>
+          <a href="#features-intro" class="btn btn--secondary" data-magnetic>Product features</a>
         </div>
       </div>
       <div class="hero__scroll" aria-hidden="true">
@@ -77,517 +55,191 @@
       </div>
     </section>
 
-    <!-- Featured image slider -->
     <section class="section featured-slider" id="featured-slider">
+      <div class="featured-slider__bg" aria-hidden="true"></div>
       <div class="container">
-        <div class="section__header section__header--row">
-          <div>
-            <p class="section__eyebrow" data-reveal="fade">Featured Gallery</p>
-            <h2 class="section__title" data-split="lines">See the collection in motion</h2>
-          </div>
+        <div class="section__header section__header--center featured-slider__header">
+          <p class="section__eyebrow" data-reveal="fade">QLED TV</p>
+          <h2 class="section__title" data-split="lines">Zenith Series · Core Series</h2>
+          <p class="section__lead" data-reveal="fade">Flagship QLED models from Zenith and Core — drag or use the arrows to explore.</p>
           <div class="featured-slider__nav" data-reveal="fade">
             <button type="button" class="slider-nav-btn" id="featPrev" aria-label="Previous">←</button>
             <button type="button" class="slider-nav-btn" id="featNext" aria-label="Next">→</button>
           </div>
         </div>
       </div>
-      <div class="featured-slider__wrap">
-        <div class="featured-slider__track" id="featTrack">
-          <article class="feat-slide">
-            <div class="feat-slide__media"><img src="images/showcase-tv.jpg" alt="NovaVision OLED television" /></div>
-            <div class="feat-slide__body">
-              <span>Televisions</span>
-              <h3>Spark every scene</h3>
-              <p>4K OLED and Quantum HDR for movies, sports, and gaming nights.</p>
-              <a href="#showcase" class="feat-slide__link">View details →</a>
-            </div>
-          </article>
-          <article class="feat-slide">
-            <div class="feat-slide__media"><img src="images/showcase-phone.jpg" alt="NovaPhone X1 smartphone" /></div>
-            <div class="feat-slide__body">
-              <span>Smartphones</span>
-              <h3>Clarity in your pocket</h3>
-              <p>Pro imaging and all-day battery for creators and travelers.</p>
-              <a href="#showcase" class="feat-slide__link">View details →</a>
-            </div>
-          </article>
-          <article class="feat-slide">
-            <div class="feat-slide__media"><img src="images/showcase-sound.jpg" alt="NovaSound Bar Pro" /></div>
-            <div class="feat-slide__body">
-              <span>Soundbars</span>
-              <h3>Fill any room</h3>
-              <p>Spatial audio with simple one-cable setup for any home.</p>
-              <a href="#showcase" class="feat-slide__link">View details →</a>
-            </div>
-          </article>
-          <article class="feat-slide">
-            <div class="feat-slide__media"><img src="images/laptop.jpg" alt="Laptop" /></div>
-            <div class="feat-slide__body">
-              <span>Laptops</span>
-              <h3>Work without weight</h3>
-              <p>Portable performance for hybrid work across the globe.</p>
-              <a href="#explore" class="feat-slide__link">View details →</a>
-            </div>
-          </article>
-          <article class="feat-slide">
-            <div class="feat-slide__media"><img src="images/smarthome.jpg" alt="Smart home" /></div>
-            <div class="feat-slide__body">
-              <span>Smart Home</span>
-              <h3>One calm control</h3>
-              <p>Lights, climate, and security in a single simple app.</p>
-              <a href="#explore" class="feat-slide__link">View details →</a>
-            </div>
-          </article>
-          <article class="feat-slide">
-            <div class="feat-slide__media"><img src="images/accessories.jpg" alt="Accessories" /></div>
-            <div class="feat-slide__body">
-              <span>Accessories</span>
-              <h3>Complete the set</h3>
-              <p>Wearables and audio extras designed to match your ecosystem.</p>
-              <a href="#explore" class="feat-slide__link">View details →</a>
-            </div>
-          </article>
-        </div>
+      <div class="featured-slider__wrap" id="featCarousel">
+        <div class="featured-slider__track" id="featTrack"></div>
       </div>
     </section>
 
-    <!-- Stats strip -->
-    <section class="stats" id="stats" aria-label="Key numbers">
-      <div class="stats__bg" aria-hidden="true"></div>
-      <div class="container stats__grid">
-        <div class="stats__item" data-reveal="fade">
-          <span class="stats__num" data-count="12">0</span><span class="stats__suffix">M+</span>
-          <p class="stats__label">Devices in homes worldwide</p>
-        </div>
-        <div class="stats__item" data-reveal="fade">
-          <span class="stats__num" data-count="98">0</span><span class="stats__suffix">%</span>
-          <p class="stats__label">Customer satisfaction score</p>
-        </div>
-        <div class="stats__item" data-reveal="fade">
-          <span class="stats__num" data-count="40">0</span><span class="stats__suffix">+</span>
-          <p class="stats__label">Countries served</p>
-        </div>
-        <div class="stats__item" data-reveal="fade">
-          <span class="stats__num" data-count="24">0</span><span class="stats__suffix">/7</span>
-          <p class="stats__label">Multilingual support</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Categories -->
     <section class="section categories" id="categories">
       <div class="container">
         <div class="section__header">
-          <p class="section__eyebrow" data-reveal="fade">Our Collection</p>
-          <h2 class="section__title" data-split="lines">Everything you need for a smarter home</h2>
-          <p class="section__lead" data-reveal="fade">
-            One ecosystem. Clear choices. From entertainment to everyday comfort —
-            each product is designed to work alone or together, with zero complexity.
-          </p>
+          <p class="section__eyebrow" data-reveal="fade">Products</p>
+          <h2 class="section__title" data-split="lines">TVs · Air Coolers · Washing Machines · Accessories</h2>
         </div>
         <div class="categories__grid">
-          <a href="#showcase" class="cat-card" data-reveal="card" data-cursor="View">
-            <div class="cat-card__media">
-              <div class="cat-card__img cat-card__img--phone"></div>
-            </div>
+          <a href="tvs.html" class="cat-card" data-reveal="card" data-cursor="View">
+            <div class="cat-card__media"><div class="cat-card__img cat-card__img--zenith"></div></div>
             <div class="cat-card__body">
-              <h3 class="cat-card__title">Smartphones</h3>
-              <p class="cat-card__desc">Flagship cameras. All-day battery.</p>
+              <h3 class="cat-card__title">TVs</h3>
+              <p class="cat-card__desc">Zenith Series and Core Series.</p>
             </div>
           </a>
-          <a href="#showcase" class="cat-card" data-reveal="card" data-cursor="View">
-            <div class="cat-card__media">
-              <div class="cat-card__img cat-card__img--tv"></div>
-            </div>
+          <a href="air-coolers.html" class="cat-card" data-reveal="card" data-cursor="View">
+            <div class="cat-card__media"><div class="cat-card__img cat-card__img--coolers"></div></div>
             <div class="cat-card__body">
-              <h3 class="cat-card__title">Televisions</h3>
-              <p class="cat-card__desc">Cinema color for film and gaming.</p>
+              <h3 class="cat-card__title">Air Coolers</h3>
+              <p class="cat-card__desc">Details to be shared.</p>
             </div>
           </a>
-          <a href="#showcase" class="cat-card" data-reveal="card" data-cursor="View">
-            <div class="cat-card__media">
-              <div class="cat-card__img cat-card__img--sound"></div>
-            </div>
+          <a href="washing-machines.html" class="cat-card" data-reveal="card" data-cursor="View">
+            <div class="cat-card__media"><div class="cat-card__img cat-card__img--washers"></div></div>
             <div class="cat-card__body">
-              <h3 class="cat-card__title">Soundbars</h3>
-              <p class="cat-card__desc">Full sound. Five-minute setup.</p>
+              <h3 class="cat-card__title">Washing Machines</h3>
+              <p class="cat-card__desc">Details to be shared.</p>
             </div>
           </a>
-          <a href="#explore" class="cat-card" data-reveal="card" data-cursor="View">
-            <div class="cat-card__media">
-              <div class="cat-card__img cat-card__img--home"></div>
-            </div>
-            <div class="cat-card__body">
-              <h3 class="cat-card__title">Smart Home</h3>
-              <p class="cat-card__desc">Lights, climate, security — one app.</p>
-            </div>
-          </a>
-          <a href="#explore" class="cat-card" data-reveal="card" data-cursor="View">
-            <div class="cat-card__media">
-              <div class="cat-card__img cat-card__img--laptop"></div>
-            </div>
-            <div class="cat-card__body">
-              <h3 class="cat-card__title">Laptops</h3>
-              <p class="cat-card__desc">Light power for work and travel.</p>
-            </div>
-          </a>
-          <a href="#explore" class="cat-card" data-reveal="card" data-cursor="View">
-            <div class="cat-card__media">
-              <div class="cat-card__img cat-card__img--accessories"></div>
-            </div>
+          <a href="accessories.html" class="cat-card" data-reveal="card" data-cursor="View">
+            <div class="cat-card__media"><div class="cat-card__img cat-card__img--accessories-voir"></div></div>
             <div class="cat-card__body">
               <h3 class="cat-card__title">Accessories</h3>
-              <p class="cat-card__desc">Audio, wearables, and chargers.</p>
+              <p class="cat-card__desc">Details to be shared.</p>
             </div>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- Showcase -->
-    <section class="section showcase" id="showcase">
+    <section class="section feature-intro" id="features-intro">
+      <div class="container">
+        <div class="section__header section__header--center feature-intro__header">
+          <h2 class="section__title" data-split="lines">Product features</h2>
+          <p class="section__lead" data-reveal="fade">Final locked feature names and taglines.</p>
+        </div>
+        <div class="feature-tabs" id="featureTabs" role="tablist" aria-label="VOIR features"></div>
+        <div class="feature-panel" id="featurePanel" data-reveal="card">
+          <div class="feature-panel__copy">
+            <p class="feature-panel__group" id="featureGroup"></p>
+            <h3 class="feature-panel__name" id="featureName"></h3>
+            <p class="feature-panel__tagline" id="featureTagline"></p>
+            <p class="feature-panel__count" id="featureCount"></p>
+          </div>
+          <div class="feature-panel__visual">
+            <img id="featureImage" src="images/tv-hero.jpg" alt="" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section showcase" id="series">
       <div class="container">
         <div class="section__header section__header--center">
-          <p class="section__eyebrow" data-reveal="fade">Featured lineup</p>
-          <h2 class="section__title" data-split="lines">Designed to feel effortless</h2>
-          <p class="section__lead" data-reveal="fade">Three flagship products. Clear benefits. No clutter.</p>
+          <p class="section__eyebrow" data-reveal="fade">Product Series</p>
+          <h2 class="section__title" data-split="lines">Zenith. Core.</h2>
         </div>
-
         <div class="showcase__list">
           <article class="showcase__item" data-reveal="card">
             <div class="showcase__visual">
-              <img src="images/showcase-phone.jpg" alt="NovaPhone X1" />
+              <img src="images/zenith-32.jpg" alt="VOIR Zenith Series QLED TV" />
             </div>
             <div class="showcase__copy">
-              <p class="showcase__label">NovaPhone X1</p>
-              <h3 class="showcase__heading">Capture more. Stay clear.</h3>
-              <p class="showcase__text">Pro camera, adaptive display, and on-device AI — built for travel days that never slow down.</p>
+              <p class="showcase__label">Zenith Series</p>
+              <h3 class="showcase__heading">Google TV · QLED and LED</h3>
+              <p class="showcase__text">VR32FLG12KQ, VR55FLG14KQ, VR65FLG14KQ, VR32FLG12KN, VR43FLG12KN.</p>
               <div class="showcase__chips">
-                <span>6.8" display</span>
-                <span>Triple camera</span>
-                <span>All-day battery</span>
+                <span>Google TV</span>
+                <span>Pixel Pure Panel</span>
+                <span>Infinity Design</span>
               </div>
-              <a href="#final-cta" class="btn btn--primary" data-magnetic data-cursor="Discover">Discover NovaPhone</a>
+              <a href="tvs.html#zenith" class="btn btn--primary" data-magnetic data-cursor="Explore">Explore Zenith</a>
             </div>
           </article>
-
           <article class="showcase__item showcase__item--flip" data-reveal="card">
             <div class="showcase__visual">
-              <img src="images/showcase-tv.jpg" alt="NovaVision OLED" />
+              <img src="images/core-40.jpg" alt="VOIR Core Series QLED TV" />
             </div>
             <div class="showcase__copy">
-              <p class="showcase__label">NovaVision OLED</p>
-              <h3 class="showcase__heading">Cinema for every room</h3>
-              <p class="showcase__text">True blacks, smooth motion, and a simple smart OS that the whole family can use.</p>
+              <p class="showcase__label">Core Series</p>
+              <h3 class="showcase__heading">Cloud TV · QLED</h3>
+              <p class="showcase__text">VTN32CH2EB, VTQ32CH2EB, VTQ40CF2EB, VTQ43CF2EB, VTN55CU2EB.</p>
               <div class="showcase__chips">
-                <span>4K OLED</span>
-                <span>Gaming ready</span>
-                <span>Voice control</span>
+                <span>Cloud TV, Android 14</span>
+                <span>Quantum Core Processor</span>
+                <span>100+ Live Free Channels</span>
               </div>
-              <a href="#final-cta" class="btn btn--primary" data-magnetic data-cursor="Discover">Explore TVs</a>
-            </div>
-          </article>
-
-          <article class="showcase__item" data-reveal="card">
-            <div class="showcase__visual">
-              <img src="images/showcase-sound.jpg" alt="NovaSound Bar Pro" />
-            </div>
-            <div class="showcase__copy">
-              <p class="showcase__label">NovaSound Bar Pro</p>
-              <h3 class="showcase__heading">Rich sound. One cable.</h3>
-              <p class="showcase__text">Spatial audio and auto room tuning — home theater without a speaker maze.</p>
-              <div class="showcase__chips">
-                <span>Spatial audio</span>
-                <span>Wireless bass</span>
-                <span>HDMI eARC</span>
-              </div>
-              <a href="#final-cta" class="btn btn--primary" data-magnetic data-cursor="Discover">Explore Audio</a>
+              <a href="tvs.html#core" class="btn btn--primary" data-magnetic data-cursor="Explore">Explore Core</a>
             </div>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- Technology -->
-    <section class="technology" id="technology">
-      <div class="container technology__inner">
-        <div class="technology__header">
-          <h2 class="technology__title" data-reveal="fade">Innovation, made practical</h2>
-          <p class="technology__desc" data-reveal="fade">
-            Displays that feel true to life — balanced brightness, contrast, and eye comfort
-            so movies look cinematic and everyday work stays easy to read.
-          </p>
-          <a href="#final-cta" class="btn btn--ghost-light" data-magnetic data-cursor="Learn" data-reveal="fade">Learn more</a>
-        </div>
-        <div class="technology__grid">
-          <article class="technology__card" data-reveal="card">
-            <img src="images/tech-card-1.jpg" alt="Cinematic display experience" />
-          </article>
-          <article class="technology__card" data-reveal="card">
-            <img src="images/tech-card-2.jpg" alt="Immersive entertainment" />
-          </article>
-          <article class="technology__card" data-reveal="card">
-            <img src="images/tech-card-3.jpg" alt="True-to-life picture quality" />
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section class="section features" id="features">
+    <section class="section" id="promise">
       <div class="container">
-        <div class="section__header section__header--center">
-          <p class="section__eyebrow" data-reveal="fade">Why NovaTech</p>
-          <h2 class="section__title" data-split="lines">Simple benefits. Serious craft.</h2>
-          <p class="section__lead" data-reveal="fade">
-            We focus on what international customers care about most: clarity, reliability,
-            energy efficiency, and support that speaks your language.
-          </p>
+        <div class="section__header">
+          <p class="section__eyebrow" data-reveal="fade">Our Promise</p>
+          <h2 class="section__title" data-split="lines">Three promises, one television</h2>
+          <p class="section__lead" data-reveal="fade">We say only what the product can deliver, and we hold that promise long after the sale — parts stocked before launch, a support line a person answers, and an engineer who shows up.</p>
         </div>
-        <div class="features__grid">
-          <article class="feature-card" data-reveal="card" data-tilt>
-            <div class="feature-card__icon">
-              <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="10" width="32" height="28" rx="3" stroke="currentColor" stroke-width="2"/><path d="M16 34h16" stroke="currentColor" stroke-width="2"/></svg>
-            </div>
-            <h3 class="feature-card__title">Stunning Display</h3>
-            <p class="feature-card__desc">Accurate color and smooth motion so every screen feels premium — from pocket to living room wall.</p>
-          </article>
-          <article class="feature-card" data-reveal="card" data-tilt>
-            <div class="feature-card__icon">
-              <svg viewBox="0 0 48 48" fill="none"><path d="M24 8v8M24 32v8M8 24h8M32 24h8" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="2"/></svg>
-            </div>
-            <h3 class="feature-card__title">Reliable Performance</h3>
-            <p class="feature-card__desc">Engineered for sustained speed under real workloads — travel, work, streaming, and play.</p>
-          </article>
-          <article class="feature-card" data-reveal="card" data-tilt>
-            <div class="feature-card__icon">
-              <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2"/><path d="M24 10v28M10 24h28" stroke="currentColor" stroke-width="2" opacity=".5"/><circle cx="24" cy="24" r="4" fill="currentColor"/></svg>
-            </div>
-            <h3 class="feature-card__title">Smart Connectivity</h3>
-            <p class="feature-card__desc">Fast Wi-Fi, seamless pairing, and Matter-ready smart home links that just work.</p>
-          </article>
-          <article class="feature-card" data-reveal="card" data-tilt>
-            <div class="feature-card__icon">
-              <svg viewBox="0 0 48 48" fill="none"><path d="M8 28c4-8 8-12 16-12s12 4 16 12" stroke="currentColor" stroke-width="2"/><path d="M14 32c3-5 6-7 10-7s7 2 10 7" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="36" r="2" fill="currentColor"/></svg>
-            </div>
-            <h3 class="feature-card__title">Immersive Sound</h3>
-            <p class="feature-card__desc">Clear dialogue and rich music — tuned with studios so every genre sounds intentional.</p>
-          </article>
-          <article class="feature-card" data-reveal="card" data-tilt>
-            <div class="feature-card__icon">
-              <svg viewBox="0 0 48 48" fill="none"><path d="M14 30c0-8 4-14 10-14s10 6 10 14" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="16" r="4" stroke="currentColor" stroke-width="2"/><path d="M18 36h12" stroke="currentColor" stroke-width="2"/></svg>
-            </div>
-            <h3 class="feature-card__title">Thoughtful AI</h3>
-            <p class="feature-card__desc">Helpful intelligence that respects privacy — processing on-device whenever possible.</p>
-          </article>
-        </div>
+        <div class="promise-grid" id="promiseGrid"></div>
+        <p class="note" style="margin-top:28px">The best brands aren't the loudest. They're the ones that keep showing up.</p>
       </div>
     </section>
 
-    <!-- Global / foreign client section -->
-    <section class="section global" id="global">
+    <section class="section pointers" id="pointers">
       <div class="container">
-        <div class="section__header section__header--center global__header">
-          <p class="section__eyebrow" data-reveal="fade">Built for the world</p>
-          <h2 class="section__title" data-split="lines">Designed for international living</h2>
-          <p class="section__lead" data-reveal="fade">
-            Clear documentation, multi-language software, and regional support —
-            wherever you set up your home, studio, or workspace.
-          </p>
+        <div class="pointers__header">
+          <h2 class="section__title" data-split="lines">Everything you need in one television.</h2>
+          <p class="section__lead" data-reveal="fade">Six pillars — picture, sound, processor, smart features, panel and aesthetics — tuned so a VOIR feels finished the moment it lands in the room.</p>
         </div>
-
-        <div class="global__points" data-reveal="fade">
-          <span>Voltage-ready models</span>
-          <span>Multi-language UI</span>
-          <span>Local warranty</span>
-          <span>Simple setup guides</span>
-        </div>
-
-        <div class="global__cards">
-          <article class="global__card" data-reveal="card">
-            <span class="global__card-num">01</span>
-            <h3>For families</h3>
-            <p>Shared profiles, parental controls, and entertainment everyone can start without a manual.</p>
-          </article>
-          <article class="global__card" data-reveal="card">
-            <span class="global__card-num">02</span>
-            <h3>For professionals</h3>
-            <p>Reliable devices, bright displays, and seamless casting for hybrid work anywhere.</p>
-          </article>
-          <article class="global__card" data-reveal="card">
-            <span class="global__card-num">03</span>
-            <h3>For creators</h3>
-            <p>Camera systems and color-accurate screens that respect your vision from shoot to share.</p>
-          </article>
-          <article class="global__card" data-reveal="card">
-            <span class="global__card-num">04</span>
-            <h3>For new homes</h3>
-            <p>Complete packages — TV, sound, and smart hub — that look cohesive and install fast.</p>
-          </article>
-        </div>
-
-        <div class="global__cta" data-reveal="fade">
-          <a href="#final-cta" class="btn btn--primary" data-magnetic data-cursor="Talk">Talk to our team</a>
-        </div>
+        <div class="pointer-groups" id="pointerGroups"></div>
       </div>
     </section>
 
-    <!-- Lifestyle -->
-    <section class="section lifestyle" id="lifestyle">
-      <div class="container">
-        <div class="lifestyle__header">
-          <h2 class="lifestyle__title" data-reveal="fade">Connect, personalize, and share moments through NovaTech OS</h2>
-        </div>
-        <div class="lifestyle__grid">
-          <article class="lifestyle__card" data-reveal="card">
-            <div class="lifestyle__media">
-              <img src="images/lifestyle-1.jpg" alt="NovaTech mobile app" />
-            </div>
-            <h3 class="lifestyle__card-title">NovaTech Mobile App</h3>
-            <p class="lifestyle__card-desc">Control your devices, personalize profiles, and manage content from your phone — wherever you are.</p>
-            <a href="#final-cta" class="btn btn--ghost-light" data-magnetic data-cursor="Learn">Learn more</a>
-          </article>
-          <article class="lifestyle__card" data-reveal="card">
-            <div class="lifestyle__media">
-              <img src="images/lifestyle-2.jpg" alt="Personalized entertainment" />
-            </div>
-            <h3 class="lifestyle__card-title">Personalized Entertainment</h3>
-            <p class="lifestyle__card-desc">Discover apps, movies, and shows with recommendations tailored to every member of your household.</p>
-            <a href="#final-cta" class="btn btn--ghost-light" data-magnetic data-cursor="Learn">Learn more</a>
-          </article>
-          <article class="lifestyle__card" data-reveal="card">
-            <div class="lifestyle__media">
-              <img src="images/lifestyle-3.jpg" alt="Share moments on NovaVision" />
-            </div>
-            <h3 class="lifestyle__card-title">Share Every Moment</h3>
-            <p class="lifestyle__card-desc">Cast photos, stream together, and keep family moments on the big screen with one simple connection.</p>
-            <a href="#final-cta" class="btn btn--ghost-light" data-magnetic data-cursor="Learn">Learn more</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Promo -->
     <section class="promo" id="promo">
       <div class="promo__bg" aria-hidden="true"></div>
       <div class="container promo__inner">
-        <span class="promo__badge" data-reveal="fade">Limited launch offer</span>
-        <h2 class="promo__title" data-split="words">Meet NovaPhone X1 — available worldwide</h2>
-        <p class="promo__desc" data-reveal="fade">
-          Pre-order today and receive complimentary NovaBuds Pro plus exclusive launch colors.
-          International shipping available through our certified partners.
-        </p>
+        <span class="promo__badge" data-reveal="fade">VOIR</span>
+        <h2 class="promo__title" data-split="words">Free installation. EMI from ₹1,499 / month.</h2>
+        <p class="promo__desc" data-reveal="fade">Installation and wall-mount fitting are included in selective models only. EMI plans start at the tenure your financing partner approves.</p>
         <div class="promo__actions" data-reveal="fade">
-          <a href="#final-cta" class="btn btn--primary btn--lg" data-magnetic data-cursor="Shop">Shop the Launch</a>
-          <a href="#showcase" class="btn btn--ghost btn--lg" data-magnetic>Compare models</a>
+          <table class="emi-table">
+            <thead><tr><th>Model</th><th>Monthly EMIs From</th></tr></thead>
+            <tbody>
+              <tr><td>VR32FLG12KQ</td><td>₹1,499/-</td></tr>
+              <tr><td>VTQ40CH2EB</td><td>₹1,499/-</td></tr>
+              <tr><td>VTQ43CH2EB</td><td>₹1,799/-</td></tr>
+              <tr><td>VTN55CH2EB</td><td>₹2,999/-</td></tr>
+              <tr><td>VR55FLG14KQ</td><td>₹3,499/-</td></tr>
+            </tbody>
+          </table>
         </div>
+        <p class="note">Free installation applies to all models in Zenith series and on models of 40 inch and above in Core series. EMI amounts are indicative starting values, subject to approval by financing partners and the applicable tenure.</p>
       </div>
     </section>
 
-    <!-- Explore -->
-    <section class="section explore" id="explore">
-      <div class="container">
-        <div class="section__header">
-          <p class="section__eyebrow" data-reveal="fade">Browse</p>
-          <h2 class="section__title" data-split="lines">Find the right category in seconds</h2>
-          <p class="section__lead" data-reveal="fade">Drag or scroll sideways to explore. Every tile leads to products designed with the same care.</p>
-        </div>
-      </div>
-      <div class="explore__track-wrap" data-cursor="Drag">
-        <div class="explore__track" id="exploreTrack">
-          <a href="#showcase" class="explore__tile"><div class="explore__tile-img explore__tile-img--1"></div><span>Smartphones</span></a>
-          <a href="#showcase" class="explore__tile"><div class="explore__tile-img explore__tile-img--2"></div><span>Televisions</span></a>
-          <a href="#showcase" class="explore__tile"><div class="explore__tile-img explore__tile-img--3"></div><span>Soundbars</span></a>
-          <a href="#features" class="explore__tile"><div class="explore__tile-img explore__tile-img--4"></div><span>Smart Home</span></a>
-          <a href="#features" class="explore__tile"><div class="explore__tile-img explore__tile-img--5"></div><span>Appliances</span></a>
-          <a href="#lifestyle" class="explore__tile"><div class="explore__tile-img explore__tile-img--6"></div><span>Laptops</span></a>
-          <a href="#promo" class="explore__tile"><div class="explore__tile-img explore__tile-img--7"></div><span>Accessories</span></a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Final CTA -->
     <section class="final-cta" id="final-cta">
       <div class="final-cta__bg" aria-hidden="true"></div>
       <div class="final-cta__grain" aria-hidden="true"></div>
       <div class="final-cta__inner">
-        <p class="section__eyebrow" data-reveal="fade">Next step</p>
-        <h2 class="final-cta__title" data-split="words">Ready for technology that feels effortless?</h2>
-        <p class="final-cta__desc" data-reveal="fade">
-          Explore the full lineup, request a regional quote, or speak with a product specialist
-          who understands your market — in clear, simple English.
-        </p>
+        <p class="section__eyebrow" data-reveal="fade">VOIR</p>
+        <h2 class="final-cta__title" data-split="words">SEE IT. LOVE IT. LIVE IT.</h2>
+        <p class="final-cta__desc" data-reveal="fade">That's why the name isn't a flourish. It's a debt being paid.</p>
         <div class="final-cta__actions" data-reveal="fade">
-          <a href="#categories" class="btn btn--primary btn--lg" data-magnetic data-cursor="Explore">Explore Products</a>
-          <a href="#global" class="btn btn--secondary btn--lg" data-magnetic>Worldwide Support</a>
+          <a href="tvs.html" class="btn btn--primary btn--lg" data-magnetic data-cursor="Explore">Explore TVs</a>
+          <a href="support.html" class="btn btn--secondary btn--lg" data-magnetic>Support</a>
         </div>
       </div>
     </section>
   </main>
-
-  <footer class="footer" id="footer">
-    <div class="container footer__top">
-      <div class="footer__col footer__col--brand">
-        <a href="#hero" class="footer__logo">
-          <span class="nav__logo-mark">N</span>
-          <span>NovaTech</span>
-        </a>
-        <p class="footer__tagline">Simple. Innovative. Made for the world.</p>
-        <p class="footer__about">
-          NovaTech builds premium electronics that are easy to choose, easy to set up,
-          and built to last — for customers and partners across continents.
-        </p>
-        <form class="footer__newsletter" id="newsletterForm" onsubmit="return false;">
-          <label for="newsletterEmail" class="sr-only">Email</label>
-          <input type="email" id="newsletterEmail" placeholder="Email for product updates" required />
-          <button type="submit" class="footer__newsletter-btn" data-magnetic aria-label="Subscribe">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg>
-          </button>
-        </form>
-      </div>
-      <div class="footer__col">
-        <h4 class="footer__heading">Products</h4>
-        <ul class="footer__links">
-          <li><a href="#categories">Smartphones</a></li>
-          <li><a href="#categories">Televisions</a></li>
-          <li><a href="#categories">Soundbars</a></li>
-          <li><a href="#categories">Smart Home</a></li>
-          <li><a href="#categories">Accessories</a></li>
-        </ul>
-      </div>
-      <div class="footer__col">
-        <h4 class="footer__heading">Company</h4>
-        <ul class="footer__links">
-          <li><a href="#global">Worldwide</a></li>
-          <li><a href="#technology">Innovation</a></li>
-          <li><a href="#features">Benefits</a></li>
-          <li><a href="#promo">Offers</a></li>
-          <li><a href="#final-cta">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer__col">
-        <h4 class="footer__heading">Follow</h4>
-        <div class="footer__social">
-          <a href="#" class="footer__social-link" aria-label="Twitter" data-magnetic>𝕏</a>
-          <a href="#" class="footer__social-link" aria-label="Instagram" data-magnetic>IG</a>
-          <a href="#" class="footer__social-link" aria-label="YouTube" data-magnetic>YT</a>
-          <a href="#" class="footer__social-link" aria-label="LinkedIn" data-magnetic>in</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer__bottom container">
-      <p>&copy; 2026 NovaTech. All rights reserved.</p>
-      <div class="footer__legal">
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="#">Cookies</a>
-      </div>
-    </div>
-  </footer>
-
+  <div id="site-footer"></div>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/chrome.js"></script>
   <script src="js/cursor.js"></script>
   <script src="js/app.js"></script>
 </body>

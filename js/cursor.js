@@ -1,5 +1,5 @@
 /**
- * NovaTech — Custom Cursor & Magnetic Interactions
+ * VOIR — Custom Cursor & Magnetic Interactions
  * Desktop only; disabled on touch / coarse pointers.
  */
 (function () {
