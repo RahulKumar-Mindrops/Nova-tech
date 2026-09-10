@@ -1179,16 +1179,32 @@
     let index = 0;
     let timer = null;
 
+    function keepTabVisible(btn) {
+      if (!btn || !tabs) return;
+      // Only nudge the tabs row horizontally — never scroll the page.
+      const overflowX = tabs.scrollWidth > tabs.clientWidth + 2;
+      if (!overflowX) return;
+      const btnLeft = btn.offsetLeft;
+      const btnRight = btnLeft + btn.offsetWidth;
+      const viewLeft = tabs.scrollLeft;
+      const viewRight = viewLeft + tabs.clientWidth;
+      if (btnLeft < viewLeft) {
+        tabs.scrollTo({ left: btnLeft - 12, behavior: "smooth" });
+      } else if (btnRight > viewRight) {
+        tabs.scrollTo({ left: btnRight - tabs.clientWidth + 12, behavior: "smooth" });
+      }
+    }
+
     function show(i) {
       index = (i + features.length) % features.length;
       const f = features[index];
+      let activeBtn = null;
       tabs.querySelectorAll(".feature-tab").forEach(function (btn, idx) {
         const on = idx === index;
         btn.classList.toggle("is-active", on);
-        if (on) {
-          btn.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-        }
+        if (on) activeBtn = btn;
       });
+      keepTabVisible(activeBtn);
       if (groupEl) groupEl.textContent = f.group;
       if (nameEl) nameEl.textContent = f.name;
       if (tagEl) tagEl.textContent = f.tagline;
